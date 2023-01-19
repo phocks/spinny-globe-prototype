@@ -1,19 +1,13 @@
 ---
 ---
 
-<h1>Hello</h1>
-
-<script is:inline src="https://unpkg.com/three@0.84"></script>
-<script is:inline src="https://unpkg.com/topojson-client@3"></script>
-<script is:inline src="https://unpkg.com/d3-array@1"></script>
-<script is:inline src="https://unpkg.com/d3-collection@1"></script>
-<script is:inline src="https://unpkg.com/d3-dispatch@1"></script>
-<script is:inline src="https://unpkg.com/d3-request@1"></script>
-<script is:inline src="https://unpkg.com/d3-timer@1"></script>
+<div class="globe-mount"></div>
 
 <script>
-  var width = 960,
-    height = 960,
+  const { THREE, d3, topojson } = window;
+
+  var width = 600,
+    height = 600,
     radius = 228,
     mesh,
     graticule,
@@ -24,7 +18,8 @@
   camera.position.z = 400;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
-  document.body.appendChild(renderer.domElement);
+  const mount = document.querySelector(".globe-mount");
+  mount.appendChild(renderer.domElement);
 
   d3.json(
     "https://unpkg.com/world-atlas@1/world/50m.json",
