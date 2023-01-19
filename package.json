@@ -11,6 +11,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^1.9.0"
+    "astro": "^1.9.0",
+    "d3": "^5",
+    "three": "^0.82.1",
+    "three-orbit-controls": "^82.1.0",
+    "topojson-client": "^3.1.0"
   }
 }
