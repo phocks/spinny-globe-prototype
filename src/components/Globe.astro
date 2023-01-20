@@ -47,12 +47,12 @@
     );
     const topology = await response.json();
     const mesh = topojson.mesh(topology, topology.objects.land);
-    return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: 0xff0000 }));
+    return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: "hsla(223, 17%, 73%, 1)" }));
   }
 
   function getGraticule() {
     const mesh = graticule10();
-    return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: 0xaaaaaa }));
+    return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: "hsla(205, 6%, 87%, 1)" }));
   }
 
   function getSphere() {
@@ -93,7 +93,7 @@
 
     // Spin the globe
     d3.timer(function (t) {
-      const { x, y, z } = vertex([t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
+      const { x, y, z } = vertex([-t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
       camera.position.x = x;
       camera.position.y = y;
       camera.position.z = z;
