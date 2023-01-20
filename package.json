@@ -11,11 +11,16 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^1.2.2",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
     "astro": "^1.9.0",
     "d3": "^5",
     "d3-array": "^3.2.2",
     "d3-collection": "^1.0.7",
     "d3-request": "^1.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "three": "^0.110.0",
     "three-orbit-controls": "^82.1.0",
     "topojson-client": "^3.1.0"
