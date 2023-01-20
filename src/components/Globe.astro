@@ -55,13 +55,25 @@
     return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: 0xaaaaaa }));
   }
 
+  function getSphere() {
+    const geometry = new THREE.SphereGeometry(radius - 0.01, 32, 32);
+    const material = new THREE.MeshBasicMaterial({ color: "white" });
+    return new THREE.Mesh(geometry, material);
+
+    // const geometry = new THREE.SphereGeometry(radius - 0.3, 32, 32);
+    // const material = new THREE.MeshBasicMaterial({ color: "white" });
+    // return new THREE.Mesh(geometry, material);
+  }
+
   const main = async () => {
     const land = await getLand();
+    const sphere = getSphere();
     const scene = getScene();
 
     function getScene() {
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0xffffff);
+      scene.add(sphere);
       scene.add(graticule);
       scene.add(land);
       return scene;
@@ -81,6 +93,7 @@
     const mount = document.querySelector(".globe-mount");
     mount.appendChild(renderer.domElement);
 
+    // Spin the globe
     d3.timer(function (t) {
       const { x, y, z } = vertex([t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
       camera.position.x = x;
