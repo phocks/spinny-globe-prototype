@@ -1,17 +1,21 @@
 ---
 ---
 
-
 <div class="globe-mount"></div>
 
 <script>
   import * as THREE from "three/build/three.min.js";
   import * as topojson from "topojson-client";
+
+  // D3 modules
   import * as d3Array from "d3-array";
   import * as d3Collection from "d3-collection";
   import * as d3Timer from "d3-timer";
   import * as d3Request from "d3-request";
   import * as d3Dispatch from "d3-dispatch";
+
+  // Local
+  import { vertex } from "../lib/vertex.js";
 
   const { d3: d3Window } = window;
 
@@ -21,10 +25,10 @@
     ...d3Collection,
     ...d3Timer,
     ...d3Request,
-    ...d3Dispatch,
+    ...d3Dispatch
   };
 
-  var width = 600,
+  let width: number = 600,
     height = 600,
     radius = 228,
     mesh,
@@ -42,7 +46,10 @@
   d3.json("https://unpkg.com/world-atlas@1/world/50m.json", function (error, topology) {
     if (error) throw error;
     scene.add(
-      (graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({ color: 0xaaaaaa })))
+      (graticule = wireframe(
+        graticule10(),
+        new THREE.LineBasicMaterial({ color: 0xaaaaaa })
+      ))
     );
     scene.add(
       (mesh = wireframe(
@@ -51,23 +58,14 @@
       ))
     );
     d3.timer(function (t) {
-      graticule.rotation.x = mesh.rotation.x = (Math.sin(t / 11000) * Math.PI) / 3 - Math.PI / 2;
+      graticule.rotation.x = mesh.rotation.x =
+        (Math.sin(t / 11000) * Math.PI) / 3 - Math.PI / 2;
       graticule.rotation.z = mesh.rotation.z = t / 10000;
       renderer.render(scene, camera);
     });
   });
 
-  // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
-  function vertex(point) {
-    var lambda = (point[0] * Math.PI) / 180,
-      phi = (point[1] * Math.PI) / 180,
-      cosPhi = Math.cos(phi);
-    return new THREE.Vector3(
-      radius * cosPhi * Math.cos(lambda),
-      radius * cosPhi * Math.sin(lambda),
-      radius * Math.sin(phi)
-    );
-  }
+  
 
   // Converts a GeoJSON MultiLineString in spherical coordinates to a THREE.LineSegments.
   function wireframe(multilinestring, material) {
