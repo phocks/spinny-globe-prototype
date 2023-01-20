@@ -15,8 +15,7 @@
   import * as d3Dispatch from "d3-dispatch";
 
   // Local
-  // import { vertex } from "../lib/vertex.js";
-  import { wireframe } from "../lib/wireframe.js";
+  import { wireframe, vertex } from "../lib/wireframe.js";
   import { graticule10 } from "../lib/graticule10.js";
 
   const d3 = {
@@ -27,43 +26,70 @@
     ...d3Dispatch
   };
 
-  let width: number = 600,
-    height = 600,
-    radius = 228,
-    mesh,
-    graticule,
-    scene = new THREE.Scene(),
-    camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000),
-    renderer = new THREE.WebGLRenderer({ alpha: true });
+  const radius = 100;
+  const width = 600;
+  const height = 600;
 
-  camera.position.z = 400;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(width, height);
-  const mount = document.querySelector(".globe-mount");
-  mount.appendChild(renderer.domElement);
+  const camera = getCamera();
+  const graticule = getGraticule();
 
-  d3.json("https://unpkg.com/world-atlas@1/world/50m.json", function (error, topology) {
-    if (error) throw error;
+  function getCamera() {
+    const fov = 70;
+    const aspect = width / height;
+    const near = 1;
+    const far = 1000;
+    return new THREE.PerspectiveCamera(fov, aspect, near, far);
+  }
 
-    scene.add(
-      (graticule = wireframe(
-        graticule10(),
-        new THREE.LineBasicMaterial({ color: 0xaaaaaa })
-      ))
+  async function getLand() {
+    const response = await fetch(
+      "https://cdn.jsdelivr.net/npm/world-atlas@2/land-50m.json"
     );
+    const topology = await response.json();
+    const mesh = topojson.mesh(topology, topology.objects.land);
+    return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: 0xff0000 }));
+  }
 
-    scene.add(
-      (mesh = wireframe(
-        topojson.mesh(topology, topology.objects.land),
-        new THREE.LineBasicMaterial({ color: 0xff0000 })
-      ))
-    );
+  function getGraticule() {
+    const mesh = graticule10();
+    return wireframe(mesh, radius, new THREE.LineBasicMaterial({ color: 0xaaaaaa }));
+  }
+
+  const main = async () => {
+    const land = await getLand();
+    const scene = getScene();
+
+    function getScene() {
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xffffff);
+      scene.add(graticule);
+      scene.add(land);
+      return scene;
+    }
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(devicePixelRatio);
+
+    const t = Date.now();
+    const { x, y, z } = vertex([t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
+    camera.position.x = x;
+    camera.position.y = y;
+    camera.position.z = z;
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+    const mount = document.querySelector(".globe-mount");
+    mount.appendChild(renderer.domElement);
 
     d3.timer(function (t) {
-      graticule.rotation.x = mesh.rotation.x =
-        (Math.sin(t / 11000) * Math.PI) / 3 - Math.PI / 2;
-      graticule.rotation.z = mesh.rotation.z = t / 10000;
+      const { x, y, z } = vertex([t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
+      camera.position.x = x;
+      camera.position.y = y;
+      camera.position.z = z;
+      camera.lookAt(scene.position);
       renderer.render(scene, camera);
     });
-  });
+  };
+
+  main();
 </script>
