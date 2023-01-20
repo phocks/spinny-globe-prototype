@@ -1,10 +1,28 @@
 ---
 ---
 
+
 <div class="globe-mount"></div>
 
 <script>
-  const { THREE, d3, topojson } = window;
+  import * as THREE from "three/build/three.min.js";
+  import * as topojson from "topojson-client";
+  import * as d3Array from "d3-array";
+  import * as d3Collection from "d3-collection";
+  import * as d3Timer from "d3-timer";
+  import * as d3Request from "d3-request";
+  import * as d3Dispatch from "d3-dispatch";
+
+  const { d3: d3Window } = window;
+
+  const d3 = {
+    ...d3Window,
+    ...d3Array,
+    ...d3Collection,
+    ...d3Timer,
+    ...d3Request,
+    ...d3Dispatch,
+  };
 
   var width = 600,
     height = 600,
@@ -21,30 +39,23 @@
   const mount = document.querySelector(".globe-mount");
   mount.appendChild(renderer.domElement);
 
-  d3.json(
-    "https://unpkg.com/world-atlas@1/world/50m.json",
-    function (error, topology) {
-      if (error) throw error;
-      scene.add(
-        (graticule = wireframe(
-          graticule10(),
-          new THREE.LineBasicMaterial({ color: 0xaaaaaa })
-        ))
-      );
-      scene.add(
-        (mesh = wireframe(
-          topojson.mesh(topology, topology.objects.land),
-          new THREE.LineBasicMaterial({ color: 0xff0000 })
-        ))
-      );
-      d3.timer(function (t) {
-        graticule.rotation.x = mesh.rotation.x =
-          (Math.sin(t / 11000) * Math.PI) / 3 - Math.PI / 2;
-        graticule.rotation.z = mesh.rotation.z = t / 10000;
-        renderer.render(scene, camera);
-      });
-    }
-  );
+  d3.json("https://unpkg.com/world-atlas@1/world/50m.json", function (error, topology) {
+    if (error) throw error;
+    scene.add(
+      (graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({ color: 0xaaaaaa })))
+    );
+    scene.add(
+      (mesh = wireframe(
+        topojson.mesh(topology, topology.objects.land),
+        new THREE.LineBasicMaterial({ color: 0xff0000 })
+      ))
+    );
+    d3.timer(function (t) {
+      graticule.rotation.x = mesh.rotation.x = (Math.sin(t / 11000) * Math.PI) / 3 - Math.PI / 2;
+      graticule.rotation.z = mesh.rotation.z = t / 10000;
+      renderer.render(scene, camera);
+    });
+  });
 
   // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
   function vertex(point) {
@@ -128,7 +139,7 @@
               return Math.abs(y % DY) > epsilon;
             })
             .map(y)
-        ),
+        )
     };
   }
 
