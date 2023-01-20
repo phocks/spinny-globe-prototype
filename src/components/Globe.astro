@@ -29,7 +29,7 @@
     ...d3Dispatch
   };
 
-  const radius = 500;
+  const radius = 100;
   const width = 600;
   const height = 600;
 
@@ -37,7 +37,7 @@
   const graticule = getGraticule();
 
   function getCamera() {
-    const fov = 70;
+    const fov = 60;
     const aspect = width / height;
     const near = 1;
     const far = 1000;
@@ -64,7 +64,7 @@
 
   function getSphere() {
     const geometry = new THREE.SphereGeometry(radius - 0.001, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: "#fcfdff" });
+    const material = new THREE.MeshBasicMaterial({ color: "white" });
     return new THREE.Mesh(geometry, material);
   }
 
@@ -87,19 +87,19 @@
     renderer.setSize(width, height);
     renderer.setPixelRatio(devicePixelRatio);
 
-    const t = Date.now();
-    const { x, y, z } = vertex([t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
-    camera.position.x = x;
-    camera.position.y = y;
-    camera.position.z = z;
-    camera.lookAt(scene.position);
-    renderer.render(scene, camera);
+    // const t = Date.now();
+    // const { x, y, z } = vertex([t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
+    // camera.position.x = x;
+    // camera.position.y = y;
+    // camera.position.z = z;
+    // camera.lookAt(scene.position);
+    // renderer.render(scene, camera);
     const mount = document.querySelector(".globe-mount");
     mount.appendChild(renderer.domElement);
 
     // Spin the globe
     d3.timer(function (t) {
-      const { x, y, z } = vertex([-t / 100, Math.sin(t / 5000) * 45], radius * 1.75);
+      const { x, y, z } = vertex([-t / 100, Math.sin(t / 5000) * 45], radius * 2.5);
       camera.position.x = x;
       camera.position.y = y;
       camera.position.z = z;

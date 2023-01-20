@@ -5,7 +5,7 @@ function Globe() {
     console.log("React component mounted: Globe");
   }, []);
 
-  return <div>Hello</div>;
+  return <div>Hello World!</div>;
 }
 
 export default Globe;
