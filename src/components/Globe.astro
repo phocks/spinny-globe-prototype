@@ -56,13 +56,9 @@
   }
 
   function getSphere() {
-    const geometry = new THREE.SphereGeometry(radius - 0.01, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: "white" });
+    const geometry = new THREE.SphereGeometry(radius - 0.001, 32, 32);
+    const material = new THREE.MeshBasicMaterial({ color: "#fcfdff" });
     return new THREE.Mesh(geometry, material);
-
-    // const geometry = new THREE.SphereGeometry(radius - 0.3, 32, 32);
-    // const material = new THREE.MeshBasicMaterial({ color: "white" });
-    // return new THREE.Mesh(geometry, material);
   }
 
   const main = async () => {
@@ -72,14 +68,16 @@
 
     function getScene() {
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xffffff);
+      // scene.background = new THREE.Color("white");
+
       scene.add(sphere);
       scene.add(graticule);
       scene.add(land);
       return scene;
     }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0); // default
     renderer.setSize(width, height);
     renderer.setPixelRatio(devicePixelRatio);
 
