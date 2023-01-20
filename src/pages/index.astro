@@ -1,13 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Globe from "../components/Globe.astro";
-import Globe2 from "../islands/Globe";
+import Globe from "../islands/Globe/React";
 ---
 
 <Layout title="Spinny Globe">
   <main>
-    <Globe />
-    <Globe2 client:visible />
+    
+    <Globe client:idle />
   </main>
 </Layout>
 

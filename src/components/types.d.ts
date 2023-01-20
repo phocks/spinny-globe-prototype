@@ -1,1 +1,0 @@
-interface Window { THREE: any; d3: any; topojson: any; }
